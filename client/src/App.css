@@ -1,0 +1,43 @@
+/* .main-container {
+  line-height: 20px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.homepage-content {
+  flex-grow: 1;
+}
+
+.content-wrapper {
+  min-height: calc(100vh - 120px);
+  padding: 20px;
+}
+
+
+.text-bold {
+  font-weight: 700;
+}
+
+.main-head {
+  font-size: 16px;
+  display: block;
+  width: 100%;
+}
+
+.small {
+  font-size: 15px;
+}
+
+* {
+  font-family: Arial, sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.bg-white {
+  background-color: #fff;
+} */
