@@ -1,16 +1,24 @@
+import axios from "../api/axios";
 import endpoints from "../constants/endpoints";
 
 const { venues } = endpoints
 
 const VenuesService = {
-  // getAllVenues: async () => {
-  //   try {
-  //     const response = await axios.get(`${BASE_URL}/venues`);
-  //     return response.data;
-  //   } catch (error) {
-  //     throw new Error(error.response.data.message);
-  //   }
-  // },
+  getAllVenues: async () => {
+    try {
+      const method = venues.all.method
+      const url = venues.all.url()
+
+      const response = await axios({
+        url,
+        method,
+        headers: { "Content-Type": "application/json" }
+      })
+      return response.data
+    } catch (error) {
+      throw new Error(error.response)
+    }
+  },
 
   // getVenueById: async (id) => {
   //   try {
@@ -21,7 +29,7 @@ const VenuesService = {
   //   }
   // },
 
-  createVenue: async (axiosPrivate ,venueData) => {
+  createVenue: async (axiosPrivate, venueData) => {
     try {
       const method = venues.create.method
       const url = venues.create.url()

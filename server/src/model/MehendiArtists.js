@@ -3,7 +3,7 @@ import mongoose from 'mongoose'
 const { Schema } = mongoose
 
 const mehendiArtistSchema = new Schema({
-  businessName: { type: String, required: true },
+  businessName: { type: String, required: true, unique: true },
   address: { type: String, required: true },
   priceQuote: { type: String, required: true },
   artistDescription: { type: String, required: true },

@@ -1,15 +1,17 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { TextField, Typography, Box, Container, Button } from '@mui/material'
 import { useForm } from 'react-hook-form'
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate'
 import { useSnackbar } from 'notistack'
 import { useNavigate } from 'react-router'
 import MehendiArtistsService from '../../../services/MehendiArtists'
+import LoginUserContext from '../../../context/LoginUserProvider'
 
 const MehendiArtist = () => {
   const axiosPrivate = useAxiosPrivate()
   const { enqueueSnackbar } = useSnackbar()
   const navigate = useNavigate()
+  const { setMehendiArtists } = useContext(LoginUserContext)
 
   // const defaultValues = {
   //   businessName: 'Default Business Name',
@@ -24,7 +26,7 @@ const MehendiArtist = () => {
   //   pricePerPlateNonVeg: 'Default Price Per Plate - Non-Veg',
   // }
   const defaultValues = {
-    businessName: "Mehendi Magic",
+    businessName: `Mehendi Magic ${Math.floor(Math.random() * 10000)}`,
     address: "456 Henna Avenue, Cityville, Country",
     priceQuote: "$100 - $200",
     artistDescription: "I am a passionate Mehendi artist with over 5 years of experience. I specialize in intricate and elegant designs, blending traditional and modern styles to create stunning henna art.",
@@ -44,11 +46,15 @@ const MehendiArtist = () => {
   }
 
   const onSubmit = async (data) => {
-    console.log(data)
     try {
       const mehendiArtistInfo = await MehendiArtistsService.createMehendiArtist(axiosPrivate, data)
-      // const mehendiArtistInfo = {}
-      console.log(mehendiArtistInfo)
+      setMehendiArtists(prevArtists => {
+        return [
+          mehendiArtistInfo,
+          ...(prevArtists.filter(m => m._id !== mehendiArtistInfo._id))
+        ]
+      })
+
       enqueueSnackbar('Mehendi Artist created successfully', {
         variant: 'success', anchorOrigin: {
           vertical: 'top',

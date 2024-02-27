@@ -1,16 +1,17 @@
-import React, { useContext } from 'react';
-import { Grid, Card, CardContent, CardMedia, Typography, CardActionArea } from '@mui/material';
-import '../css/HomePage.css';
-import venuesLogo from '../images/venues.jpeg';
-import photographersLogo from '../images/photographers.webp';
-import makeupLogo from '../images/makeup-artists.jpeg';
-import floristLogo from '../images/florist-decor.jpeg';
-import musiciansLogo from '../images/musicians-dancers.jpg';
-import panditsLogo from '../images/pandits.jpeg';
-import foodcateringLogo from '../images/food-catering.jpeg';
-import diyLogo from '../images/diy-assistance.jpg';
-import useAuth from '../hooks/useAuth';
-import LoginUserContext from '../context/LoginUserProvider';
+import React, { useContext } from 'react'
+import { Grid, Card, CardContent, CardMedia, Typography, CardActionArea } from '@mui/material'
+import '../css/HomePage.css'
+import venuesLogo from '../images/venues.jpeg'
+import photographersLogo from '../images/photographers.webp'
+import makeupLogo from '../images/makeup-artists.jpeg'
+import floristLogo from '../images/florist-decor.jpeg'
+import musiciansLogo from '../images/musicians-dancers.jpg'
+import panditsLogo from '../images/pandits.jpeg'
+import foodcateringLogo from '../images/food-catering.jpeg'
+import diyLogo from '../images/diy-assistance.jpg'
+import useAuth from '../hooks/useAuth'
+import LoginUserContext from '../context/LoginUserProvider'
+import useServices from '../hooks/useServices'
 
 const gridItems = [
   {
@@ -53,11 +54,15 @@ const gridItems = [
     content: 'Get help with your do-it-yourself projects.',
     logo: diyLogo,
   },
-];
+]
 
 const HomePage = () => {
-  const { isLogged } = useAuth();
-  const { user } = useContext(LoginUserContext);
+  const { isLogged } = useAuth()
+  const { user } = useContext(LoginUserContext)
+
+  // const { venues, mehendiArtists } = useServices()
+
+  // console.log('HomePage', venues, mehendiArtists)
 
   return (
     <>
@@ -102,7 +107,7 @@ const HomePage = () => {
         </Grid>
       </Grid>
     </>
-  );
-};
+  )
+}
 
-export default HomePage;
+export default HomePage

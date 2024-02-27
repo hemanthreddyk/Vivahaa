@@ -1,3 +1,4 @@
+import axios from "../api/axios"
 import endpoints from "../constants/endpoints"
 
 const { mehendiArtists } = endpoints
@@ -18,7 +19,6 @@ const MehendiArtistsService = {
       throw new Error(error.response)
     }
   },
-
   getMehendiArtistsByUserId: async (axiosPrivate, userId) => {
     try {
       const method = mehendiArtists.byUserId.method
@@ -29,7 +29,22 @@ const MehendiArtistsService = {
     } catch (error) {
       throw new Error(error.response)
     }
-  }
+  },
+  getAllMehendiArtists: async () => {
+    try {
+      const method = mehendiArtists.all.method
+      const url = mehendiArtists.all.url()
+
+      const response = await axios({
+        url,
+        method,
+        headers: { "Content-Type": "application/json" }
+      })
+      return response.data
+    } catch (error) {
+      throw new Error(error.response)
+    }
+  },
 }
 
 export default MehendiArtistsService

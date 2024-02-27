@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { TextField, Typography, Box, Container, Button, MenuItem, FormControl, InputLabel, Select, Chip, Input } from '@mui/material'
 import { useForm, Controller } from 'react-hook-form'
 import VenuesService from '../../../services/Venues'
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate'
 import { useSnackbar } from 'notistack'
 import { useNavigate } from 'react-router'
+import LoginUserContext from '../../../context/LoginUserProvider'
 
 const Cuisine_Types = ['Italian', 'Mexican', 'Indian']
 const Facility_Types = ['Parking', 'Wi-Fi', 'Projector']
@@ -13,6 +14,8 @@ const Venue = () => {
   const axiosPrivate = useAxiosPrivate()
   const { enqueueSnackbar } = useSnackbar()
   const navigate = useNavigate()
+  const { setVenues } = useContext(LoginUserContext)
+
   
   // const defaultValues = {
   //   businessName: 'Default Business Name',
@@ -27,7 +30,7 @@ const Venue = () => {
   //   pricePerPlateNonVeg: 'Default Price Per Plate - Non-Veg',
   // }
   const defaultValues = {
-    businessName: 'Sample Venue',
+    businessName: `Sample Venue ${Math.floor(Math.random() * 10000)}`,
     address: '123 Main Street, City, Country',
     priceQuote: '$1000 - $1500',
     description: 'A beautiful venue for weddings and events, featuring modern amenities and elegant decor.',
@@ -55,10 +58,15 @@ const Venue = () => {
   }
 
   const onSubmit = async (data) => {
-    console.log(data)
     try {
       const venueInfo = await VenuesService.createVenue(axiosPrivate, data)
-      console.log(venueInfo)
+      
+      setVenues(prevVenues => {
+        return [
+          venueInfo,
+          ...(prevVenues.filter(m => m._id !== venueInfo._id))
+        ]
+      })
       enqueueSnackbar('Venue created successfully', {
         variant: 'success', anchorOrigin: {
           vertical: 'top',

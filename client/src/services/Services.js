@@ -1,7 +1,11 @@
-// import endpoints from "../constants/endpoints"
+import MehendiArtistsService from "./MehendiArtists"
+import VenuesService from "./Venues"
 
-// const { user } = endpoints
+export const getAllServices = async () => {
+  const [mehendiArtists, venues] = await Promise.all([
+    MehendiArtistsService.getAllMehendiArtists(),
+    VenuesService.getAllVenues()
+  ])
 
-export const getMyServices = async (axiosPrivate, userId) => {
-  return []
+  return { mehendiArtists, venues }
 }
