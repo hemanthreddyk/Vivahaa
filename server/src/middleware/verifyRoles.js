@@ -13,4 +13,4 @@ const verifyRoles = (...allowedRoles) => {
   };
 }
 
-module.exports = verifyRoles
+export default verifyRoles

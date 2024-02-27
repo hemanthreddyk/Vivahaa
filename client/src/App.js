@@ -11,8 +11,8 @@ import PersistLogin from './components/PersistLogin'
 import UserProfile from './components/UserProfile'
 import LoginUserContext from './context/LoginUserProvider'
 import Dashboard from './components/vendor/Dashboard'
-import ProfileCreationRoutes from './routes/ProfileCreation'
 import Venue from './components/vendor/forms/Venue'
+import MehendiArtist from './components/vendor/forms/MehendiArtist'
 
 function App() {
   const { isLogged } = useAuth()
@@ -57,11 +57,10 @@ function App() {
                   <Route path="/vendor-dashboard" element={<Dashboard />} />
                   <Route path="/profile-creation" element={<Outlet />} >
                     <Route path="venue" element={<Venue />} />
-                    <Route path="makeup" element={<Venue />} />
+                    <Route path="mehendi-artist" element={<MehendiArtist />} />
                     <Route path="decorator" element={<Venue />} />
                     <Route path="photographer" element={<Venue />} />
                   </Route>
-                  {/* <Route path="/profile-creation/venue" element={<Venue />} /> */}
                 </Route>
                 <Route path="/login" element={isLogged ? <Navigate to="/" replace /> : <Login />} />
                 <Route path="/register" element={isLogged ? <Navigate to="/" replace /> : <Register />} />

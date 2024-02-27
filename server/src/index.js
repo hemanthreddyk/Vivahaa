@@ -16,6 +16,9 @@ import authRoute from './routes/api/auth.js'
 import refreshRoute from './routes/api/refresh.js'
 import logoutRoute from './routes/api/logout.js'
 import usersRoute from './routes/api/users.js'
+import venuesRoute from './routes/api/venues.js'
+import mehendiArtistsRoute from './routes/api/mehendiArtists.js'
+
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
 config()
@@ -37,6 +40,8 @@ app.use('/auth', authRoute)
 app.use('/refresh', refreshRoute)
 app.use('/logout', logoutRoute)
 app.use('/api/users', usersRoute)
+app.use(venuesRoute)
+app.use(mehendiArtistsRoute)
 
 app.all('*', (req, res) => {
   res.status(404)

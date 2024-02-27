@@ -1,11 +1,19 @@
-import React from 'react';
-import { TextField, Typography, Box, Container, Button, MenuItem, FormControl, InputLabel, Select, Chip, Input } from '@mui/material';
-import { useForm, Controller } from 'react-hook-form';
+import React from 'react'
+import { TextField, Typography, Box, Container, Button, MenuItem, FormControl, InputLabel, Select, Chip, Input } from '@mui/material'
+import { useForm, Controller } from 'react-hook-form'
+import VenuesService from '../../../services/Venues'
+import useAxiosPrivate from '../../../hooks/useAxiosPrivate'
+import { useSnackbar } from 'notistack'
+import { useNavigate } from 'react-router'
 
-const Cuisine_Types = ['Italian', 'Mexican', 'Indian'];
-const Facility_Types = ['Parking', 'Wi-Fi', 'Projector'];
+const Cuisine_Types = ['Italian', 'Mexican', 'Indian']
+const Facility_Types = ['Parking', 'Wi-Fi', 'Projector']
 
 const Venue = () => {
+  const axiosPrivate = useAxiosPrivate()
+  const { enqueueSnackbar } = useSnackbar()
+  const navigate = useNavigate()
+  
   // const defaultValues = {
   //   businessName: 'Default Business Name',
   //   address: 'Default Address',
@@ -31,7 +39,7 @@ const Venue = () => {
     pricePerPlateNonVeg: '$25 per plate',
   }
 
-  const { handleSubmit, register, formState: { errors }, control } = useForm({ defaultValues });
+  const { handleSubmit, register, formState: { errors }, control } = useForm({ defaultValues })
 
   const placeholderValues = {
     businessName: "Enter your business name",
@@ -44,12 +52,30 @@ const Venue = () => {
     facilitiesAvailable: "Select facilities available",
     pricePerPlateVeg: "Enter price per plate for vegetarian menu",
     pricePerPlateNonVeg: "Enter price per plate for non-vegetarian menu",
-  };
+  }
 
-  const onSubmit = (data) => {
-    console.log(data);
-    // Perform submission logic here
-  };
+  const onSubmit = async (data) => {
+    console.log(data)
+    try {
+      const venueInfo = await VenuesService.createVenue(axiosPrivate, data)
+      console.log(venueInfo)
+      enqueueSnackbar('Venue created successfully', {
+        variant: 'success', anchorOrigin: {
+          vertical: 'top',
+          horizontal: 'right'
+        }
+      })
+      navigate('/vendor-dashboard', { replace: true })
+    } catch (error) {
+      console.log(error)
+      enqueueSnackbar('Error while creating a venue', {
+        variant: 'success', anchorOrigin: {
+          vertical: 'top',
+          horizontal: 'right'
+        }
+      })
+    }
+  }
 
   return (
     <Container component="main" maxWidth="xl">
@@ -90,6 +116,8 @@ const Venue = () => {
           helperText={errors.description && errors.description.message}
           sx={{ mb: 2 }}
           placeholder={placeholderValues.description}
+          multiline
+          rows={4}
         />
         <TextField
           fullWidth
@@ -237,7 +265,7 @@ const Venue = () => {
         </Button>
       </Box>
     </Container>
-  );
+  )
 }
 
-export default Venue;
+export default Venue

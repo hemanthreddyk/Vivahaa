@@ -12,8 +12,8 @@ const GridWithClickableCards = () => {
       path: '/profile-creation/venue'
     },
     {
-      name: 'Makeup',
-      path: '/profile-creation/makeup'
+      name: 'Mehendi Artist',
+      path: '/profile-creation/mehendi-artist'
     },
     {
       name: 'Decorators',
