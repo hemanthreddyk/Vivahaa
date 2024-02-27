@@ -30,15 +30,12 @@ const UserProfile = () => {
 
   const onSubmit = async (data) => {
     try {
+      console.log(data)
       // Your form submission logic here
     } catch (error) {
       console.error('Error saving user details:', error)
       enqueueSnackbar('Failed to save user details', { variant: 'error' })
     }
-  }
-
-  const onProfilePicChange = async ({ file, fileList, event }) => {
-    // Your profile picture change logic here
   }
 
   return (
@@ -76,9 +73,10 @@ const UserProfile = () => {
             fullWidth
             label="Password"
             type="password"
-            {...register('password', { required: true })}
+            {...register('password')}
             error={!!errors.password}
             helperText={errors.password && 'Password is required'}
+            autoComplete="new-password"
           />
           <TextField
             margin="normal"
@@ -87,11 +85,11 @@ const UserProfile = () => {
             label="Confirm Password"
             type="password"
             {...register('confirmPassword', {
-              required: true,
               validate: value => value === password.current || "Passwords do not match"
             })}
             error={!!errors.confirmPassword}
             helperText={errors.confirmPassword && 'Passwords do not match'}
+            autoComplete="new-password"
           />
           <Grid container spacing={2} alignItems="center">
             <Grid item xs={3}>
@@ -114,7 +112,7 @@ const UserProfile = () => {
                 required
                 fullWidth
                 label="Mobile Number"
-                type="number"
+                // type="number"
                 {...register('mobileNumber', { required: true, pattern: /^\d{10}$/ })}
                 error={!!errors.mobileNumber}
                 helperText={errors.mobileNumber && 'Valid 10-digit mobile number is required'}

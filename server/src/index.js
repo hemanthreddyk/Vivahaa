@@ -40,8 +40,8 @@ app.use('/auth', authRoute)
 app.use('/refresh', refreshRoute)
 app.use('/logout', logoutRoute)
 app.use('/api/users', usersRoute)
-app.use(venuesRoute)
-app.use(mehendiArtistsRoute)
+app.use('/venues', venuesRoute)
+app.use('/mehendi-artists', mehendiArtistsRoute)
 
 app.all('*', (req, res) => {
   res.status(404)

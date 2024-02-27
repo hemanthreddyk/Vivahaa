@@ -21,7 +21,7 @@ const endpoints = {
   venues: {
     all: {
       method: HTTP_METHODS.GET,
-      url: () => '/venues'
+      url: () => '/venues/all'
     },
     byId: {
       method: HTTP_METHODS.GET,
@@ -47,7 +47,7 @@ const endpoints = {
   mehendiArtists: {
     all: {
       method: HTTP_METHODS.GET,
-      url: () => '/mehendi-artists'
+      url: () => '/mehendi-artists/all'
     },
     byId: {
       method: HTTP_METHODS.GET,
