@@ -42,7 +42,7 @@ const UserProfileDropdown = () => {
         onClick: () => handleMenuClose(),
         to: '/user/profile',
       },
-      {
+      user?.roles.includes(5151) && {
         label: 'Vendor Dashboard',
         onClick: () => handleMenuClose(),
         to: '/vendor-dashboard',
@@ -51,8 +51,8 @@ const UserProfileDropdown = () => {
         label: 'Sign Out',
         onClick: signOut,
       },
-    ]
-  }, [])
+    ].filter(Boolean);
+  }, [user])
 
   return (
     <>
