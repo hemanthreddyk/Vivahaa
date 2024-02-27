@@ -43,9 +43,9 @@ export const getVenuesByUserId = async (req, res) => {
     const userId = req.params.userId
     const venues = await Venue.find({ createdBy: userId })
 
-    if (!venues || venues.length === 0) {
-      return res.status(204).json({ message: 'No venues found for this user' })
-    }
+    // if (!venues || venues.length === 0) {
+    //   return res.status(204).json({ message: 'No venues found for this user' })
+    // }
 
     res.json(venues)
   } catch (error) {

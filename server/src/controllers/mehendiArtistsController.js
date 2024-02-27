@@ -44,9 +44,9 @@ export const getMehendiArtistsByUserId = async (req, res) => {
     const userId = req.params.userId
     const mehendiArtists = await MehendiArtists.find({ createdBy: userId })
 
-    if (!mehendiArtists || mehendiArtists.length === 0) {
-      return res.status(204).json({ message: 'No mehendi artists found for this user' })
-    }
+    // if (!mehendiArtists || mehendiArtists.length === 0) {
+    //   return res.status(204).json({ message: 'No mehendi artists found for this user' })
+    // }
 
     res.json(mehendiArtists)
   } catch (error) {
