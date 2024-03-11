@@ -83,7 +83,7 @@ const MyServices = () => {
     return {
       title: m.businessName,
       content: m.workDescription,
-      logo: mehendiLogo,
+      logo: m.portfolioImages?.[0] ?? mehendiLogo,
     }
   })
 

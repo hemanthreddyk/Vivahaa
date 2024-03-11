@@ -13,6 +13,8 @@ import LoginUserContext from './context/LoginUserProvider'
 import Dashboard from './components/vendor/Dashboard'
 import Venue from './components/vendor/forms/Venue'
 import MehendiArtist from './components/vendor/forms/MehendiArtist'
+import ShowMehendiArtists from './components/listings/ShowMehendiArtists'
+import ShowVenues from './components/listings/ShowVenues'
 
 function App() {
   const { isLogged } = useAuth()
@@ -43,7 +45,8 @@ function App() {
               sx={{
                 display: 'flex',
                 flexDirection: 'column',
-                alignItems: 'center',
+                // alignItems: 'center',
+                alignItems:"flex-start",
                 pt: { xs: 14, sm: 20 },
                 pb: { xs: 4, sm: 6 },
               }}
@@ -61,6 +64,9 @@ function App() {
                     <Route path="decorator" element={<Venue />} />
                     <Route path="photographer" element={<Venue />} />
                   </Route>
+
+                  <Route path="/mehendi-artists/all" element={<ShowMehendiArtists />} />
+                  <Route path="/venues/all" element={<ShowVenues />} />
                 </Route>
                 <Route path="/login" element={isLogged ? <Navigate to="/" replace /> : <Login />} />
                 <Route path="/register" element={isLogged ? <Navigate to="/" replace /> : <Register />} />

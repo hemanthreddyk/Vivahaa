@@ -1,5 +1,6 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { Grid, Card, CardContent, CardMedia, Typography, CardActionArea } from '@mui/material'
+import { Link } from 'react-router-dom'
 import '../css/HomePage.css'
 import venuesLogo from '../images/venues.jpeg'
 import photographersLogo from '../images/photographers.webp'
@@ -9,15 +10,20 @@ import musiciansLogo from '../images/musicians-dancers.jpg'
 import panditsLogo from '../images/pandits.jpeg'
 import foodcateringLogo from '../images/food-catering.jpeg'
 import diyLogo from '../images/diy-assistance.jpg'
-import useAuth from '../hooks/useAuth'
-import LoginUserContext from '../context/LoginUserProvider'
-import useServices from '../hooks/useServices'
+import mehendiLogo from '../images/mehendi-artists.jpg'
 
 const gridItems = [
+  {
+    title: 'Mehendi Artists',
+    content: 'Beautiful henna designs for your special occasions.',
+    logo: mehendiLogo,
+    link: '/mehendi-artists/all'
+  },
   {
     title: 'Venues',
     content: 'Find the perfect location for your special day.',
     logo: venuesLogo,
+    link: '/venues/all'
   },
   {
     title: 'Photographers',
@@ -57,37 +63,31 @@ const gridItems = [
 ]
 
 const HomePage = () => {
-  const { isLogged } = useAuth()
-  const { user } = useContext(LoginUserContext)
-
-  // const { venues, mehendiArtists } = useServices()
-
-  // console.log('HomePage', venues, mehendiArtists)
-
   return (
     <>
-      {/* <h1>{isLogged && user?.fullName}</h1> */}
       <Grid container spacing={2}>
         {gridItems.map((item, index) => (
           <Grid item xs={12} sm={6} md={4} key={index}>
-            <Card sx={{ height: '100%' }}>
-              <CardActionArea>
-                <CardMedia
-                  component="img"
-                  height="140"
-                  image={item.logo}
-                  alt={item.title}
-                />
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="div">
-                    {item.title}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {item.content}
-                  </Typography>
-                </CardContent>
-              </CardActionArea>
-            </Card>
+            <Link to={item.link} style={{ textDecoration: 'none' }}>
+              <Card sx={{ height: '100%' }}>
+                <CardActionArea>
+                  <CardMedia
+                    component="img"
+                    height="140"
+                    image={item.logo}
+                    alt={item.title}
+                  />
+                  <CardContent>
+                    <Typography gutterBottom variant="h5" component="div">
+                      {item.title}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {item.content}
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            </Link>
           </Grid>
         ))}
       </Grid>

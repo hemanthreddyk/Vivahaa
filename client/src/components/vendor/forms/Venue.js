@@ -1,14 +1,13 @@
 import React, { useContext } from 'react'
-import { TextField, Typography, Box, Container, Button, MenuItem, FormControl, InputLabel, Select, Chip, Input } from '@mui/material'
+import { TextField, Typography, Box, Container, Button, MenuItem, FormControl, InputLabel, Select, Chip } from '@mui/material'
 import { useForm, Controller } from 'react-hook-form'
 import VenuesService from '../../../services/Venues'
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate'
 import { useSnackbar } from 'notistack'
 import { useNavigate } from 'react-router'
 import LoginUserContext from '../../../context/LoginUserProvider'
-
-const Cuisine_Types = ['Italian', 'Mexican', 'Indian']
-const Facility_Types = ['Parking', 'Wi-Fi', 'Projector']
+import { convertFileListToBase64 } from '../../../utils'
+import { Cuisine_Types, Facility_Types, venueTypes } from '../../../constants'
 
 const Venue = () => {
   const axiosPrivate = useAxiosPrivate()
@@ -16,7 +15,7 @@ const Venue = () => {
   const navigate = useNavigate()
   const { setVenues } = useContext(LoginUserContext)
 
-  
+
   // const defaultValues = {
   //   businessName: 'Default Business Name',
   //   address: 'Default Address',
@@ -36,10 +35,11 @@ const Venue = () => {
     description: 'A beautiful venue for weddings and events, featuring modern amenities and elegant decor.',
     contactInfo: 'info@example.com | +1 (123) 456-7890',
     seatingCapacity: '150',
-    cuisinesAvailable: ['Italian', 'Mexican'], // Default selected cuisines
-    facilitiesAvailable: ['Parking', 'Wi-Fi'], // Default selected facilities
+    cuisinesAvailable: [1, 2], // Default selected cuisines
+    facilitiesAvailable: [1, 3], // Default selected facilities
     pricePerPlateVeg: '$20 per plate',
     pricePerPlateNonVeg: '$25 per plate',
+    venueType: 1
   }
 
   const { handleSubmit, register, formState: { errors }, control } = useForm({ defaultValues })
@@ -59,14 +59,18 @@ const Venue = () => {
 
   const onSubmit = async (data) => {
     try {
+      const portfolioImages = data.portfolioImages
+      const base64Strings = await convertFileListToBase64(portfolioImages)
+      data.portfolioImages = base64Strings
       const venueInfo = await VenuesService.createVenue(axiosPrivate, data)
-      
+
       setVenues(prevVenues => {
         return [
           venueInfo,
           ...(prevVenues.filter(m => m._id !== venueInfo._id))
         ]
       })
+
       enqueueSnackbar('Venue created successfully', {
         variant: 'success', anchorOrigin: {
           vertical: 'top',
@@ -77,7 +81,20 @@ const Venue = () => {
     } catch (error) {
       console.log(error)
       enqueueSnackbar('Error while creating a venue', {
-        variant: 'success', anchorOrigin: {
+        variant: 'error', anchorOrigin: {
+          vertical: 'top',
+          horizontal: 'right'
+        }
+      })
+    }
+  }
+
+  const handleFileChange = (e) => {
+    const files = e.target.files;
+    if (files.length > 5) {
+      e.target.value = null
+      enqueueSnackbar('You can upload only up to 5 files', {
+        variant: 'error', anchorOrigin: {
           vertical: 'top',
           horizontal: 'right'
         }
@@ -98,6 +115,36 @@ const Venue = () => {
           sx={{ mb: 2 }}
           placeholder={placeholderValues.businessName}
         />
+
+        <FormControl fullWidth sx={{ mb: 2 }}>
+          <InputLabel id="venue-type-label">Venue Type</InputLabel>
+          <Controller
+            name="venueType"
+            control={control}
+            defaultValue={1} // Default value for venue type
+            render={({ field }) => (
+              <Select
+                {...field}
+                labelId="venue-type-label"
+                id="venue-type"
+                label="Venue Type"
+                error={!!errors.venueType}
+              >
+                {venueTypes.map((venueType) => (
+                  <MenuItem key={venueType.id} value={venueType.id}>
+                    {venueType.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            )}
+          />
+          {errors.venueType && (
+            <Typography variant="caption" color="error">
+              Venue Type is required
+            </Typography>
+          )}
+        </FormControl>
+
         <TextField
           fullWidth
           label="Address"
@@ -127,6 +174,33 @@ const Venue = () => {
           multiline
           rows={4}
         />
+
+        <TextField
+          fullWidth
+          type="file"
+          label="Portfolio of Past Work (Upload Photos)"
+          InputLabelProps={{
+            shrink: true,
+          }}
+          InputProps={{
+            inputProps: {
+              multiple: true,
+              accept: 'image/*',
+              onChange: handleFileChange
+            }
+          }}
+          {...register('portfolioImages', {
+            validate: {
+              atLeastOneImage: (value) => {
+                return value && value.length > 0;
+              }
+            }
+          })}
+          error={!!errors.portfolioImages}
+          helperText={errors.portfolioImages && 'Please select at least one image'}
+          sx={{ mb: 2 }}
+        />
+
         <TextField
           fullWidth
           label="Contact Info"
@@ -145,7 +219,7 @@ const Venue = () => {
           sx={{ mb: 2 }}
           placeholder={placeholderValues.seatingCapacity}
         />
-        <FormControl fullWidth sx={{ mb: 2 }}>
+        {/* <FormControl fullWidth sx={{ mb: 2 }}>
           <InputLabel id="cuisines-available-label">Cuisines Available</InputLabel>
           <Controller
             name="cuisinesAvailable"
@@ -171,9 +245,9 @@ const Venue = () => {
                 )}
               >
                 {
-                  Cuisine_Types.map((name) => (
-                    <MenuItem key={name} value={name}>
-                      {name}
+                  Cuisine_Types.map((cuisineType) => (
+                    <MenuItem key={cuisineType.id} value={cuisineType.id}>
+                      {cuisineType.name}
                     </MenuItem>
                   ))
                 }
@@ -185,7 +259,48 @@ const Venue = () => {
               {errors.cuisinesAvailable.message}
             </Typography>
           )}
+        </FormControl> */}
+
+        <FormControl fullWidth sx={{ mb: 2 }}>
+          <InputLabel id="cuisines-available-label">Cuisines Available</InputLabel>
+          <Controller
+            name="cuisinesAvailable"
+            control={control}
+            defaultValue={[]}
+            rules={{ required: 'Cuisines Available is required' }}
+            render={({ field }) => (
+              <Select
+                {...field}
+                labelId="cuisines-available-label"
+                id="cuisines-available"
+                label="Cuisines Available"
+                multiple
+                error={!!errors.cuisinesAvailable}
+                placeholder={placeholderValues.cuisinesAvailable}
+                sx={{ minWidth: 120 }}
+                renderValue={(selected) => (
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                    {selected.map((value) => (
+                      <Chip key={value} label={Cuisine_Types.find((cuisine) => cuisine.id === value)?.name} />
+                    ))}
+                  </Box>
+                )}
+              >
+                {Cuisine_Types.map((cuisineType) => (
+                  <MenuItem key={cuisineType.id} value={cuisineType.id}>
+                    {cuisineType.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            )}
+          />
+          {errors.cuisinesAvailable && (
+            <Typography variant="caption" color="error">
+              {errors.cuisinesAvailable.message}
+            </Typography>
+          )}
         </FormControl>
+
 
         <FormControl fullWidth sx={{ mb: 2 }}>
           <InputLabel id="facilities-available-label">Facilities Available</InputLabel>
@@ -206,15 +321,17 @@ const Venue = () => {
                 sx={{ minWidth: 120 }}
                 renderValue={(selected) => (
                   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                    {selected.map((value) => (
-                      <Chip key={value} label={value} />
+                    {selected.map((id) => (
+                      <Chip key={id} label={Facility_Types.find(facilityType => facilityType.id === id).name} />
                     ))}
                   </Box>
                 )}
               >
-                {Facility_Types.map((name) => (
-                  <MenuItem key={name} value={name}>
-                    {name}
+
+
+                {Facility_Types.map((facilityType) => (
+                  <MenuItem key={facilityType.id} value={facilityType.id}>
+                    {facilityType.name}
                   </MenuItem>
                 ))}
               </Select>
@@ -237,7 +354,7 @@ const Venue = () => {
           placeholder={placeholderValues.pricePerPlateVeg}
         />
 
-        
+
         <TextField
           fullWidth
           label="Price Per Plate - Non-Veg"

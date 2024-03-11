@@ -21,7 +21,7 @@ const PersistLogin = () => {
       }
     }
 
-    if (!auth.accessToken) {
+    if (!auth.accessToken && document.cookie.includes("jwt")) {
       verifyRefreshToken()
     } else {
       setIsLoading(false)

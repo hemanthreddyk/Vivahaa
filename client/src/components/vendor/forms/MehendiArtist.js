@@ -6,6 +6,7 @@ import { useSnackbar } from 'notistack'
 import { useNavigate } from 'react-router'
 import MehendiArtistsService from '../../../services/MehendiArtists'
 import LoginUserContext from '../../../context/LoginUserProvider'
+import { convertFileListToBase64 } from '../../../utils'
 
 const MehendiArtist = () => {
   const axiosPrivate = useAxiosPrivate()
@@ -47,6 +48,12 @@ const MehendiArtist = () => {
 
   const onSubmit = async (data) => {
     try {
+      const portfolioImages = data.portfolioImages
+
+      const base64Strings = await convertFileListToBase64(portfolioImages)
+
+      // console.log(base64Strings)
+      data.portfolioImages = base64Strings
       const mehendiArtistInfo = await MehendiArtistsService.createMehendiArtist(axiosPrivate, data)
       setMehendiArtists(prevArtists => {
         return [
@@ -66,6 +73,19 @@ const MehendiArtist = () => {
       console.log(error)
       enqueueSnackbar('Error while creating a Mehendi Artist', {
         variant: 'success', anchorOrigin: {
+          vertical: 'top',
+          horizontal: 'right'
+        }
+      })
+    }
+  }
+
+  const handleFileChange = (e) => {
+    const files = e.target.files;
+    if (files.length > 5) {
+      e.target.value = null
+      enqueueSnackbar('You can upload only up to 5 files', {
+        variant: 'error', anchorOrigin: {
           vertical: 'top',
           horizontal: 'right'
         }
@@ -134,6 +154,32 @@ const MehendiArtist = () => {
           helperText={errors.contactInfo && errors.contactInfo.message}
           sx={{ mb: 2 }}
           placeholder={placeholderValues.contactInfo}
+        />
+
+        <TextField
+          fullWidth
+          type="file"
+          label="Portfolio of Past Work (Upload Photos)"
+          InputLabelProps={{
+            shrink: true,
+          }}
+          InputProps={{
+            inputProps: {
+              multiple: true,
+              accept: 'image/*',
+              onChange: handleFileChange
+            }
+          }}
+          {...register('portfolioImages', {
+            validate: {
+              atLeastOneImage: (value) => {
+                return value && value.length > 0;
+              }
+            }
+          })}
+          error={!!errors.portfolioImages}
+          helperText={errors.portfolioImages && 'Please select at least one image'}
+          sx={{ mb: 2 }}
         />
 
         <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>

@@ -3,6 +3,8 @@ import endpoints from "../constants/endpoints"
 
 const { mehendiArtists } = endpoints
 
+let mehendiArtistsList = []
+
 const MehendiArtistsService = {
   createMehendiArtist: async (axiosPrivate, mehendiArtistData) => {
     try {
@@ -32,15 +34,18 @@ const MehendiArtistsService = {
   },
   getAllMehendiArtists: async () => {
     try {
-      const method = mehendiArtists.all.method
-      const url = mehendiArtists.all.url()
+      if (!mehendiArtistsList.length) {
+        const method = mehendiArtists.all.method
+        const url = mehendiArtists.all.url()
+        const response = await axios({
+          url,
+          method,
+          headers: { "Content-Type": "application/json" }
+        })
 
-      const response = await axios({
-        url,
-        method,
-        headers: { "Content-Type": "application/json" }
-      })
-      return response.data
+        mehendiArtistsList = [...response.data]
+      }
+      return mehendiArtistsList
     } catch (error) {
       throw new Error(error.response)
     }

@@ -9,6 +9,7 @@ const mehendiArtistSchema = new Schema({
   artistDescription: { type: String, required: true },
   workDescription: { type: String, required: true },
   contactInfo: { type: String, required: true },
+  portfolioImages: [{ type: String }],
   createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   lastModifiedBy: { type: Schema.Types.ObjectId, ref: 'User' }
 }, { timestamps: true })

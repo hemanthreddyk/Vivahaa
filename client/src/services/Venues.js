@@ -3,18 +3,24 @@ import endpoints from "../constants/endpoints";
 
 const { venues } = endpoints
 
+let venuesList = []
+
 const VenuesService = {
   getAllVenues: async () => {
     try {
-      const method = venues.all.method
-      const url = venues.all.url()
+      if (!venuesList.length) {
+        const method = venues.all.method
+        const url = venues.all.url()
 
-      const response = await axios({
-        url,
-        method,
-        headers: { "Content-Type": "application/json" }
-      })
-      return response.data
+        const response = await axios({
+          url,
+          method,
+          headers: { "Content-Type": "application/json" }
+        })
+
+        venuesList = [...response.data]
+      }
+      return venuesList
     } catch (error) {
       throw new Error(error.response)
     }

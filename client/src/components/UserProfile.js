@@ -6,7 +6,8 @@ import { useSnackbar } from 'notistack'
 import axios from '../api/axios'
 import LoginUserContext from '../context/LoginUserProvider'
 import useAxiosPrivate from '../hooks/useAxiosPrivate'
-import { arrayBufferToBase64 } from '../utils'
+import { arrayBufferToBase64, convertToBase64 } from '../utils'
+import { updateUserProfile } from '../services/User'
 
 const UserProfile = () => {
   const { user, setUser } = React.useContext(LoginUserContext)
@@ -15,10 +16,11 @@ const UserProfile = () => {
   const axiosPrivate = useAxiosPrivate()
   const password = React.useRef({})
   password.current = watch("password", "")
+
+  // const buffer = user?.profilePicture?.data?.data
+  // const profilePicString = buffer ? arrayBufferToBase64(buffer, user.profilePicture.contentType) : ''
   
-  const buffer = user?.profilePicture?.data?.data
-  const profilePicString = buffer ? arrayBufferToBase64(buffer, user.profilePicture.contentType) : ''
-  const [previewImage, setPreviewImage] = React.useState(profilePicString || null)
+  const [previewImage, setPreviewImage] = React.useState(user?.mypic || null)
 
   React.useEffect(() => {
     reset({
@@ -30,24 +32,55 @@ const UserProfile = () => {
 
   const onSubmit = async (data) => {
     try {
-      console.log(data)
-      // Your form submission logic here
+      const payload = {...data, mypic: previewImage}
+      console.log(payload)
+      const res = await updateUserProfile(axiosPrivate, user.id, payload )
+      const newuser = {...user, ...res}
+      setUser(newuser)
+      console.log(res)
     } catch (error) {
       console.error('Error saving user details:', error)
       enqueueSnackbar('Failed to save user details', { variant: 'error' })
     }
   }
 
+  const onImageChange = async (e) => {
+    console.log(e.target.files)
+    const file = e.target.files[0]
+    const base64 = await convertToBase64(file)
+    console.log(base64)
+    setPreviewImage(base64)
+  }
+
   return (
     <Container component="main" maxWidth="xs">
       <Box sx={{ marginTop: 8, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+        {/* <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
           <LockOutlinedIcon />
-        </Avatar>
+        </Avatar> */}
+
+        <label htmlFor="profilePictureInput">
+          <Avatar
+            sx={{ width: 100, height: 100, bgcolor: 'secondary.main', cursor: 'pointer' }}
+            alt="Avatar"
+            // src={previewImage || user?.profilePicture?.data?.data}
+            src={previewImage || user?.mypic}
+          />
+          <input
+            type="file"
+            accept="image/*"
+            onChange={onImageChange}
+            hidden
+            id="profilePictureInput"
+          />
+        </label>
+
+
         <Typography component="h1" variant="h5">
           User Profile
         </Typography>
         <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate sx={{ mt: 1 }}>
+
           <TextField
             margin="normal"
             required
@@ -125,6 +158,18 @@ const UserProfile = () => {
           <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
             Update Profile
           </Button>
+
+          {/* <Button
+            variant="contained"
+            component="label"
+          >
+            Upload File
+            <input
+              type="file"
+              hidden
+            />
+          </Button> */}
+
         </Box>
       </Box>
     </Container>

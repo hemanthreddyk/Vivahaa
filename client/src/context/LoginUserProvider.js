@@ -46,7 +46,7 @@ export const LoginUserProvider = ({ children }) => {
   }, [isLogged, auth.id, axiosPrivate])
 
   return (
-    <LoginUserContext.Provider value={{ user, venues, setVenues, mehendiArtists, setMehendiArtists, fetchUserInProgress: loading }}>
+    <LoginUserContext.Provider value={{ user, setUser, venues, setVenues, mehendiArtists, setMehendiArtists, fetchUserInProgress: loading }}>
       {children}
     </LoginUserContext.Provider>
   )

@@ -1,6 +1,7 @@
 const HTTP_METHODS = {
   GET: 'GET',
   POST: 'POST',
+  PATCH: 'PATCH',
   PUT: 'PUT',
   DELETE: 'DELETE'
 }
@@ -13,10 +14,14 @@ const endpoints = {
     }
   },
   user: {
-    profile: {
+    getProfile: {
       method: HTTP_METHODS.GET,
       url: (id) => `api/users/${id}`
-    }
+    },
+    updateProfile: {
+      method: HTTP_METHODS.PATCH,
+      url: (id) => `api/users/${id}`
+    },
   },
   venues: {
     all: {

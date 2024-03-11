@@ -1,5 +1,5 @@
 import User from "../model/User.js"
-import multer from 'multer'
+// import multer from 'multer'
 
 export const getAllUsers = async (req, res) => {
   try {
@@ -35,7 +35,8 @@ export const getUserById = async (req, res) => {
       email: user.email,
       mobileNumber: user.mobileNumber,
       roles: user.roles,
-      profilePicture: user.profilePicture
+      profilePicture: user.profilePicture,
+      mypic: user.mypic
     }
     res.json(UserInfo)
   } catch (error) {
@@ -54,9 +55,6 @@ export const updateUserById = async (req, res) => {
   }
  
   try {
-    const { buffer, mimetype, originalname } = req.file
-// console.log(req.file)
-// res.sendStatus(200)
     const existingUser = await User.findById(userId)
     if (!existingUser) {
       return res.status(404).json({ error: 'User not found' })
@@ -66,16 +64,7 @@ export const updateUserById = async (req, res) => {
     existingUser.fullName = userData.fullName
     existingUser.email = userData.email
     existingUser.mobileNumber = userData.mobileNumber
-
-    // // Handle profile picture
-    if (buffer) {
-      // Handle profile picture if provided in the request
-      existingUser.profilePicture = {
-        data: buffer,
-        contentType: mimetype,
-        name: originalname
-      }
-    }
+    existingUser.mypic = userData.mypic
 
     // // Save updated user details
     await existingUser.save()
@@ -86,7 +75,8 @@ export const updateUserById = async (req, res) => {
       email: existingUser.email,
       mobileNumber: existingUser.mobileNumber,
       roles: existingUser.roles,
-      profilePicture: existingUser.profilePicture
+      profilePicture: existingUser.profilePicture,
+      mypic: existingUser.mypic
     }
 
     res.status(200).json(UserInfo)

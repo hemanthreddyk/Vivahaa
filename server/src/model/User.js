@@ -29,6 +29,7 @@ const userSchema = new Schema({
     contentType: String,
     name: String
   },
+  mypic: String
 }, {
   timestamps: true // Add timestamps for createdAt and updatedAt
 })

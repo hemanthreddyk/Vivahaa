@@ -9,10 +9,12 @@ const venueSchema = new Schema({
   description: { type: String, required: true },
   contactInfo: { type: String, required: true },
   seatingCapacity: { type: Number, required: true },
-  cuisinesAvailable: { type: [String], required: true },
-  facilitiesAvailable: { type: [String], required: true },
+  cuisinesAvailable: { type: [Number], required: true },
+  facilitiesAvailable: { type: [Number], required: true },
   pricePerPlateVeg: { type: String, required: true },
   pricePerPlateNonVeg: { type: String, required: true },
+  portfolioImages: [{ type: String }],
+  venueType: { type: Number, required: true },
   createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   lastModifiedBy: { type: Schema.Types.ObjectId, ref: 'User' }
 }, { timestamps: true })

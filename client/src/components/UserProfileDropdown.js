@@ -4,15 +4,13 @@ import { AccountCircle } from '@mui/icons-material'
 import { Link, useNavigate } from 'react-router-dom'
 import useLogout from '../hooks/useLogout'
 import LoginUserContext from '../context/LoginUserProvider'
-import { arrayBufferToBase64 } from '../utils'
 
 const UserProfileDropdown = () => {
   const navigate = useNavigate()
   const logout = useLogout()
   const [anchorEl, setAnchorEl] = useState(null)
   const { user } = useContext(LoginUserContext)
-  const buffer = user?.profilePicture?.data?.data
-  const profilePicString = buffer ? arrayBufferToBase64(buffer, user.profilePicture.contentType) : ''
+  const profilePicString = user?.mypic
 
   useEffect(() => {
     return () => {
